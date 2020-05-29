@@ -9,6 +9,8 @@ ADD requirements.txt /home/tapis/requirements.txt
 RUN pip install -r /home/tapis/requirements.txt
 
 ADD actor.py /home/tapis/actor.py
-
+USER root
+RUN chmod -R a+rwx /home/tapis
+USER tapis
 ENTRYPOINT ["python", "/home/tapis/actor.py"]
 

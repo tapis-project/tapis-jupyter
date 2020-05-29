@@ -1,6 +1,11 @@
 import datetime
 from io import StringIO
 import os
+import sys
+sys.path.extend(['/home/tapis/.local/lib/python3.7/site-packages',
+                 '/usr/local/lib/python3.7/site-packages',
+                 '/usr/local/lib/python3.7/site-packages/IPython/extensions',
+                 '/home/tapis/.ipython'])
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -11,8 +16,8 @@ from tapy.dyna import DynaTapy
 
 
 # defaults for the username, password, and base_url ----
-username = os.environ.get('username', 'testuser6')
-password = os.environ.get('password', 'testuser6')
+username = os.environ.get('username', 'testuser2')
+password = os.environ.get('password', 'testuser2')
 base_url = os.environ.get('base_url', 'https://dev.develop.tapis.io')
 
 # location to write output file -
@@ -23,8 +28,6 @@ out = '/home/tapis/output.png'
 try:
     t = DynaTapy(base_url=base_url, username=username, password=password)
     t.get_tokens()
-    tfiles = DynaTapy(base_url=base_url, username='testuser2', password='testuser2')
-    tfiles.get_tokens()
 except Exception as e:
     print(f"got exception trying to generate tapis client; e: {e}")
     raise e
@@ -89,7 +92,7 @@ def upload_plot():
     system_id = os.environ.get('system_id', 'S3-bucket')
     dest_path = os.environ.get('destination_path', '/plot.png')
     try:
-        tfiles.upload(system_id=system_id, source_file_path=out, dest_file_path=dest_path)
+        t.upload(system_id=system_id, source_file_path=out, dest_file_path=dest_path)
     except Exception as e:
         print(f"got exception trying to upload file: {e}")
         raise e
