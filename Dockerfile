@@ -1,4 +1,4 @@
-
+# image: tapis/pearc20-demo
 from tapis/flaskbase
 
 USER root
