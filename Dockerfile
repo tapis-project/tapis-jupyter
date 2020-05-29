@@ -1,14 +1,23 @@
 
-FROM jupyter/tensorflow-notebook
+from tapis/flaskbase
 
-RUN git clone https://github.com/tapis-project/python-sdk.git tapy
+USER root
 
-ADD tapis_notebook.ipynb tapy/
+RUN git clone https://github.com/tapis-project/python-sdk.git gittapy
 
-RUN pip install -r tapy/requirements.txt
+RUN cp -r gittapy/* /home/tapis/tapy
+RUN pip install -r /home/tapis/tapy/requirements.txt
 
-RUN pip install openapi-core==0.11.1
+ADD configschema.json /home/tapis/configschema.json
+ADD config-dev-develop.json /home/tapis/config.json
+ADD tapis_notebook.ipynb /home/tapis/tapy/
 
-RUN cd tapy; git pull; git checkout demo
+RUN chown -R tapis:tapis /home/tapis
 
-ENTRYPOINT ["jupyter", "notebook", "--ip=0.0.0.0","tapy/tapis_notebook.ipynb"]
+RUN pip install jupyter scipy
+
+USER tapis
+
+WORKDIR /home/tapis/tapy
+
+ENTRYPOINT ["jupyter", "notebook", "--ip=0.0.0.0","tapis_notebook.ipynb"]
