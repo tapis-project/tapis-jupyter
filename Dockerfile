@@ -3,6 +3,9 @@ FROM jupyter/tensorflow-notebook
 
 RUN git clone https://github.com/tapis-project/python-sdk.git tapy
 
+RUN git clone https://github.com/tapis-project/flaskbase.git
+RUN cp -r /home/jovyan/flaskbase/common /home/jovyan/common
+
 ADD tapis_notebook.ipynb tapy/
 
 RUN pip install -r tapy/requirements.txt
