@@ -1,4 +1,5 @@
 import datetime
+import dateutil
 from io import StringIO
 import os
 import sys
@@ -39,7 +40,7 @@ def get_datetime_range(time):
     """
     print(f"top of get_datetime_range; time: {time}")
     try:
-        end_datetime = datetime.datetime.strptime(time, '%Y-%m-%dT%H:%M:%SZ')
+        end_datetime = dateutil.parser.isoparse(time)
     except Exception as e:
         print(f"got exception trying to convert time string to datetime; e: {e}")
         raise e
@@ -85,17 +86,18 @@ def generate_plot_from_df(df):
     df.plot(lw=1, colormap='jet', marker='.', markersize=12, title='Timeseries Stream Output').get_figure().savefig(out)
 
 
-def upload_plot():
+def upload_plot(time):
     """
     Upload the plot to a tapis S3 bucket.
     """
     system_id = os.environ.get('system_id', 'S3-bucket')
-    dest_path = os.environ.get('destination_path', '/plot.png')
+    dest_path = os.environ.get('destination_path', f'/plot_{time}.png')
     try:
         t.upload(system_id=system_id, source_file_path=out, dest_file_path=dest_path)
     except Exception as e:
         print(f"got exception trying to upload file: {e}")
         raise e
+    print(f'{dest_path} uploaded successfully.')
 
 
 def main():
@@ -117,7 +119,7 @@ def main():
     csv_data = get_measurements(project_id, site_id, inst_id, start_datetime, end_datetime)
     df = create_dataframe(csv_data)
     generate_plot_from_df(df)
-    upload_plot()
+    upload_plot(time)
 
 
 if __name__ == '__main__':
