@@ -19,6 +19,7 @@ RUN mkdir /home/tapis/tapy/dyna
 
 RUN cp -r /home/tapis/tapy/tapy/dyna/* /home/tapis/tapy/dyna
 
+ADD actor/* /home/tapis/tapy/actor/
 USER tapis
 
 WORKDIR /home/tapis/tapy
