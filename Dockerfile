@@ -3,7 +3,7 @@ from tapis/flaskbase
 
 USER root
 
-RUN pip install jupyter scipy pandas matplotlib
+RUN pip install jupyterlab scipy pandas matplotlib pandas_bokeh
 
 RUN rm -r /home/tapis/tapy
 RUN git clone https://github.com/tapis-project/python-sdk.git tapy
