@@ -1,3 +1,4 @@
+import bokeh
 import datetime
 import dateutil
 from io import StringIO
@@ -19,7 +20,7 @@ from tapy.dyna import DynaTapy
 # defaults for the username, password, and base_url ----
 username = os.environ.get('username', 'testuser2')
 password = os.environ.get('password', 'testuser2')
-base_url = os.environ.get('base_url', 'https://dev.develop.tapis.io')
+base_url = os.environ.get('base_url', 'https://dev.tapis.io')
 
 # location to write output file -
 # out = '/home/jovyan/tapy/output.png'
@@ -83,14 +84,23 @@ def generate_plot_from_df(df):
     """
     Generates a plot using matlab from the pandas dataframe.
     """
-    df.plot(lw=1, colormap='jet', marker='.', markersize=12, title='Timeseries Stream Output').get_figure().savefig(out)
-
+    df.plot(lw=1,
+            colormap='jet',
+            marker='.',
+            markersize=12,
+            title='Timeseries Stream Output',
+            xticks=[0,1,2,3,4,5,6,7,8,9,10],
+            rot=45).get_figure().savefig(out)
+    # import matplotlib.pyplot as plt
+    # p = df.plot(lw=1, colormap='jet', marker='.', markersize=12, title='Timeseries Stream Output', rot=90)
+    # # p.set_xticklabels(df.get_xticklabels(), rotation=45)
+    # plt.savefig(out)
 
 def upload_plot(time):
     """
     Upload the plot to a tapis S3 bucket.
     """
-    system_id = os.environ.get('system_id', 'S3-bucket')
+    system_id = os.environ.get('system_id', 'tapis-demo')
     dest_path = os.environ.get('destination_path', f'/plot_{time}.png')
     try:
         t.upload(system_id=system_id, source_file_path=out, dest_file_path=dest_path)

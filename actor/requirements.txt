@@ -1,3 +1,4 @@
 agavepy
 pandas
+pandas_bokeh
 matplotlib
