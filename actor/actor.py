@@ -1,4 +1,3 @@
-import bokeh
 import datetime
 import dateutil
 from io import StringIO
@@ -10,6 +9,7 @@ sys.path.extend(['/home/tapis/.local/lib/python3.7/site-packages',
                  '/home/tapis/.ipython'])
 
 import matplotlib.pyplot as plt
+import matplotlib.dates as md
 import pandas as pd
 
 from agavepy.actors import get_context, get_client, send_bytes_result
@@ -58,6 +58,7 @@ def get_measurements(project_id, site_id, inst_id, start_datetime, end_datetime)
     print(f"top of get_measurements: {inst_id}; {project_id}; {site_id}; {start_datetime}; {end_datetime}")
     start_time = datetime.datetime.strftime(start_datetime, '%Y-%m-%dT%H:%M:%SZ')
     end_time = datetime.datetime.strftime(end_datetime, '%Y-%m-%dT%H:%M:%SZ')
+    end_time += datetime.timedelta(days=1)
     try:
         return t.streams.list_measurements(inst_id=inst_id,
                                            project_uuid=project_id,
@@ -84,13 +85,16 @@ def generate_plot_from_df(df):
     """
     Generates a plot using matlab from the pandas dataframe.
     """
+    xfmt = md.DateFormatter('%H:%M:%S')
     df.plot(lw=1,
             colormap='jet',
             marker='.',
             markersize=12,
-            title='Timeseries Stream Output',
-            xticks=[0,1,2,3,4,5,6,7,8,9,10],
-            rot=45).get_figure().savefig(out)
+            title='Timeseries Stream Output',,
+            rot=90).xaxis.set_major_formatter(xfmt)
+    plt.tight_layout()
+    plt.legend(loc='best')
+    plt.savefig(out)
     # import matplotlib.pyplot as plt
     # p = df.plot(lw=1, colormap='jet', marker='.', markersize=12, title='Timeseries Stream Output', rot=90)
     # # p.set_xticklabels(df.get_xticklabels(), rotation=45)
@@ -134,4 +138,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
