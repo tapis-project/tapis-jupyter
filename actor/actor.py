@@ -77,7 +77,8 @@ def create_dataframe(csv_data):
     """
     inp = StringIO(str(csv_data, 'utf-8'))
     df = pd.read_csv(inp)
-    df.set_index('time', inplace=True)
+    df['datetime']=pd.to_datetime(df['time'])
+    df.set_index('datetime',inplace=True)
     return df
 
 
