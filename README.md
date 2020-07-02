@@ -5,7 +5,7 @@ This container launches a Jupyter Notebook session with the Tapis Python SDK and
 To get started:
 
 1. docker build -t tapis-jupyter .
-2. docker run -p 8888:8888 tapis-jupyter
+2. docker run -p 8888:8888 -e ABACO_NONCE=TACC-PROD_123eeee1232123 tapis-jupyter
 
 You will see output like:
 ```
