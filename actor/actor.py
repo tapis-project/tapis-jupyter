@@ -13,7 +13,7 @@ import matplotlib.dates as md
 import pandas as pd
 
 from agavepy.actors import get_context, get_client, send_bytes_result
-from tapy.dyna import DynaTapy
+from tapipy.tapis import Tapis
 
 
 
@@ -23,12 +23,11 @@ password = os.environ.get('password', 'testuser2')
 base_url = os.environ.get('base_url', 'https://dev.tapis.io')
 
 # location to write output file -
-# out = '/home/jovyan/tapy/output.png'
 out = '/home/tapis/output.png'
 
 # create Tapis client and get tokens --
 try:
-    t = DynaTapy(base_url=base_url, username=username, password=password)
+    t = Tapis(base_url=base_url, username=username, password=password)
     t.get_tokens()
 except Exception as e:
     print(f"got exception trying to generate tapis client; e: {e}")
@@ -58,7 +57,6 @@ def get_measurements(project_id, site_id, inst_id, start_datetime, end_datetime)
     print(f"top of get_measurements: {inst_id}; {project_id}; {site_id}; {start_datetime}; {end_datetime}")
     start_time = datetime.datetime.strftime(start_datetime, '%Y-%m-%dT%H:%M:%SZ')
     end_time = datetime.datetime.strftime(end_datetime, '%Y-%m-%dT%H:%M:%SZ')
-    end_time += datetime.timedelta(days=1)
     try:
         return t.streams.list_measurements(inst_id=inst_id,
                                            project_uuid=project_id,
@@ -91,15 +89,11 @@ def generate_plot_from_df(df):
             colormap='jet',
             marker='.',
             markersize=12,
-            title='Timeseries Stream Output',,
+            title='Timeseries Stream Output',
             rot=90).xaxis.set_major_formatter(xfmt)
     plt.tight_layout()
     plt.legend(loc='best')
     plt.savefig(out)
-    # import matplotlib.pyplot as plt
-    # p = df.plot(lw=1, colormap='jet', marker='.', markersize=12, title='Timeseries Stream Output', rot=90)
-    # # p.set_xticklabels(df.get_xticklabels(), rotation=45)
-    # plt.savefig(out)
 
 def upload_plot(time):
     """
@@ -130,6 +124,7 @@ def main():
         raise ke
     except Exception as e:
         print(f"Unexpected exception: {e}.")
+        raise e
     start_datetime, end_datetime = get_datetime_range(time)
     csv_data = get_measurements(project_id, site_id, inst_id, start_datetime, end_datetime)
     df = create_dataframe(csv_data)
