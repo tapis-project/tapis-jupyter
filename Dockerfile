@@ -1,31 +1,16 @@
-# image: tapis/pearc20-demo
-from tapis/flaskbase
+# image: tapis/pearc20-demo2
+from python:3.7
 
-USER root
+RUN pip install --no-cache-dir jupyterlab scipy pandas matplotlib pandas_bokeh # tapipy
+RUN pip install git+https://github.com/tapis-project/tapipy#egg=tapipy
+RUN useradd tapis
 
-RUN pip install jupyterlab scipy pandas matplotlib pandas_bokeh
-
-RUN rm -r /home/tapis/tapy
-RUN git clone https://github.com/tapis-project/python-sdk.git tapy
-ADD tapis_notebook.ipynb /home/tapis/tapy/
-ADD tapis_streams_notebook.ipynb /home/tapis/tapy/
-ADD images /home/tapis/tapy/images
-RUN pip install -r /home/tapis/tapy/requirements.txt
-
-ADD configschema.json /home/tapis/configschema.json
-ADD config-dev-develop.json /home/tapis/config.json
-
-
-RUN mkdir /home/tapis/tapy/dyna
-
-RUN cp -r /home/tapis/tapy/tapy/dyna/* /home/tapis/tapy/dyna
-
-ADD actor/* /home/tapis/tapy/actor/
-
+ADD tapis_notebook.ipynb /home/tapis/
+ADD tapis_streams_notebook.ipynb /home/tapis/
+ADD images /home/tapis/images
+ADD actor/* /home/tapis/actor/
 RUN chown -R tapis:tapis /home/tapis
-RUN chmod 777 /home/tapis/tapy/*
+
 USER tapis
-
-WORKDIR /home/tapis/tapy
-
+WORKDIR /home/tapis
 ENTRYPOINT ["jupyter", "notebook", "--ip=0.0.0.0","tapis_notebook.ipynb"]
