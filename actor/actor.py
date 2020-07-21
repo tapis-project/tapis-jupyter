@@ -40,7 +40,7 @@ def get_datetime_range(time):
     """
     print(f"top of get_datetime_range; time: {time}")
     try:
-        end_datetime = dateutil.parser.isoparse(time)
+        end_datetime = dateutil.parser.isoparse(time) + datetime.timedelta(days=1)
     except Exception as e:
         print(f"got exception trying to convert time string to datetime; e: {e}")
         raise e
