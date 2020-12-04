@@ -1,8 +1,8 @@
 # image: tapis/pearc20-demo2
 from python:3.7
 
-RUN pip install --no-cache-dir jupyterlab scipy pandas matplotlib pandas_bokeh # tapipy
-RUN pip install git+https://github.com/tapis-project/tapipy#egg=tapipy
+RUN pip install --no-cache-dir jupyterlab scipy pandas matplotlib pandas_bokeh  tapipy
+#RUN pip install git+https://github.com/tapis-project/tapipy#egg=tapipy
 RUN useradd tapis
 
 ADD tapis_notebook.ipynb /home/tapis/
